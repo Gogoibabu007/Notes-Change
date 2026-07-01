@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ApexConvert | Premium Currency Converter</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Convert currencies instantly with real-time exchange rates. Explore interactive custom search dropdowns, track rates in your watchlist, and review conversion history in a modern, responsive design.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="index.css">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <!-- Ambient background blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="app-container">
+    <!-- Header Area -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-icon">
+          <i data-lucide="coins"></i>
+        </div>
+        <div class="logo-text">
+          <h1>Apex<span>Convert</span></h1>
+          <p>Real-time FX Exchange</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <button id="theme-toggle" class="btn-icon" aria-label="Toggle Theme">
+          <i data-lucide="sun" class="sun-icon"></i>
+          <i data-lucide="moon" class="moon-icon"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-content">
+      <!-- Left side: Converter -->
+      <section class="converter-panel">
+        <div class="card glass-card main-converter-card">
+          <div class="card-header">
+            <h2>Currency Converter</h2>
+            <div class="rate-status" id="rate-status-container">
+              <span class="status-pulse"></span>
+              <span id="rate-time">Updating rates...</span>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <!-- Amount Input -->
+            <div class="input-group">
+              <label for="amount-input">Amount</label>
+              <div class="input-wrapper">
+                <span class="currency-symbol" id="from-symbol">$</span>
+                <input type="number" id="amount-input" value="100.00" min="0" step="any" placeholder="0.00" autocomplete="off">
+              </div>
+            </div>
+
+            <!-- Currency Selectors -->
+            <div class="selectors-container">
+              <!-- From Currency -->
+              <div class="selector-wrapper">
+                <label>From</label>
+                <div class="custom-dropdown" id="dropdown-from">
+                  <button type="button" class="dropdown-trigger" id="trigger-from">
+                    <img src="https://flagcdn.com/w40/us.png" alt="USD Flag" class="selected-flag">
+                    <span class="selected-code">USD</span>
+                    <span class="selected-name">United States Dollar</span>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="dropdown-search">
+                      <i data-lucide="search"></i>
+                      <input type="text" placeholder="Search currency..." class="search-input" autocomplete="off">
+                    </div>
+                    <ul class="dropdown-list" id="list-from">
+                      <!-- Dynamically Populated -->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Swap Button -->
+              <div class="swap-action">
+                <button type="button" id="swap-btn" class="btn-swap" aria-label="Swap Currencies">
+                  <i data-lucide="arrow-left-right" class="swap-icon"></i>
+                </button>
+              </div>
+
+              <!-- To Currency -->
+              <div class="selector-wrapper">
+                <label>To</label>
+                <div class="custom-dropdown" id="dropdown-to">
+                  <button type="button" class="dropdown-trigger" id="trigger-to">
+                    <img src="https://flagcdn.com/w40/eu.png" alt="EUR Flag" class="selected-flag">
+                    <span class="selected-code">EUR</span>
+                    <span class="selected-name">Euro</span>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="dropdown-search">
+                      <i data-lucide="search"></i>
+                      <input type="text" placeholder="Search currency..." class="search-input" autocomplete="off">
+                    </div>
+                    <ul class="dropdown-list" id="list-to">
+                      <!-- Dynamically Populated -->
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Output Display -->
+            <div class="conversion-output">
+              <div class="base-rate" id="exchange-rate-base">1 USD = 0.924 EUR</div>
+              <div class="result-display">
+                <span class="from-amount-val" id="display-from">100.00 USD</span>
+                <span class="equals-symbol">=</span>
+                <span class="result-amount" id="display-to">92.40 EUR</span>
+              </div>
+              <div class="inverse-rate" id="exchange-rate-inverse">1 EUR = 1.082 USD</div>
+            </div>
+
+            <button type="button" id="refresh-rates-btn" class="btn-primary">
+              <i data-lucide="refresh-cw"></i>
+              <span>Refresh Rates</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right side: Watchlist & History -->
+      <section class="side-panel">
+        <!-- Watchlist -->
+        <div class="card glass-card watchlist-card">
+          <div class="card-header">
+            <h3><i data-lucide="star"></i> Currency Watchlist</h3>
+            <button class="btn-small-icon" id="toggle-add-watchlist" title="Add pair">
+              <i data-lucide="plus"></i>
+            </button>
+          </div>
+          <div class="card-body">
+            <!-- Add Watchlist Pair Form (hidden by default) -->
+            <div id="watchlist-form-container" class="watchlist-form-dropdown hidden">
+              <div class="watchlist-selectors">
+                <div class="custom-dropdown min-dropdown" id="dropdown-watch-from">
+                  <button type="button" class="dropdown-trigger" id="trigger-watch-from">
+                    <span class="selected-code">USD</span>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="dropdown-search">
+                      <input type="text" placeholder="Search..." class="search-input" autocomplete="off">
+                    </div>
+                    <ul class="dropdown-list" id="list-watch-from"></ul>
+                  </div>
+                </div>
+                
+                <i data-lucide="arrow-right" class="arrow-between"></i>
+                
+                <div class="custom-dropdown min-dropdown" id="dropdown-watch-to">
+                  <button type="button" class="dropdown-trigger" id="trigger-watch-to">
+                    <span class="selected-code">EUR</span>
+                    <i data-lucide="chevron-down" class="chevron"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <div class="dropdown-search">
+                      <input type="text" placeholder="Search..." class="search-input" autocomplete="off">
+                    </div>
+                    <ul class="dropdown-list" id="list-watch-to"></ul>
+                  </div>
+                </div>
+                
+                <button type="button" class="btn-confirm" id="btn-add-watchlist-confirm">Add</button>
+              </div>
+            </div>
+
+            <div class="watchlist-container" id="watchlist-items">
+              <!-- Dynamically populated watchlist pairs -->
+              <div class="watchlist-placeholder">
+                <i data-lucide="info" class="placeholder-icon"></i>
+                <p>No pairs on your watchlist yet. Add pairs like USD/EUR to track them here.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- History -->
+        <div class="card glass-card history-card">
+          <div class="card-header">
+            <h3><i data-lucide="history"></i> Recent Conversions</h3>
+            <button class="btn-text" id="clear-history-btn">Clear</button>
+          </div>
+          <div class="card-body">
+            <ul class="history-list" id="history-items">
+              <!-- Dynamically populated history -->
+              <li class="history-placeholder">
+                <i data-lucide="clock" class="placeholder-icon"></i>
+                <p>Calculations history will appear here.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>Data provided by ExchangeRate API. Last updated: <span id="footer-update-time">-</span></p>
+      <p class="copyright">&copy; 2026 ApexConvert. Built for visual excellence & performance.</p>
+    </footer>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
